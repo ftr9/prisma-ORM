@@ -1,0 +1,4 @@
+mongo/node_modules
+mongo/.env
+sql/node_modules
+sql/.env

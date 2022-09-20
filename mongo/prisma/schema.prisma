@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model Employee{
+  id          String @id @db.ObjectId @map("_id") @default(auto()) 
+  username        String
+  fullname        String?
+  email           String @unique()
+  password        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  todos           Todo[]
+  department_id   String? @db.ObjectId
+  department      Department? @relation(fields: [department_id],references: [id])
+  profile         Profile?
+}
+
+model Todo{
+  id        String @id @map("_id") @db.ObjectId @default(auto())
+  name      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  employee_id   String @db.ObjectId
+  employee      Employee @relation(fields: [employee_id],references: [id])
+}
+
+model Department{
+  id          String @id @map("_id") @db.ObjectId @default(auto())
+  name        String
+  type        DepartmentType
+  employees   Employee[]
+}
+
+enum DepartmentType{
+  ACCOUNTING
+  IT
+  SCIENCE
+  MANAGEMENT
+}
+
+model Profile{
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  employee_id   String  @db.ObjectId @unique
+  employee      Employee @relation(fields: [employee_id],references: [id])
+  Date_of_birth DateTime
+  age           Int
+ locations Location[]
+}
+
+
+model Location{
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  type          LocationType
+  profile_id    String @db.ObjectId
+  profile       Profile @relation(fields: [profile_id],references: [id])
+}
+
+enum LocationType{
+  PERMANENT
+  TEMPORARY
+}

@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee{
+  id            Int @id @default(autoincrement()) 
+  username      String @db.VarChar(5)
+  fullname      String?
+  email         String @unique
+  password      String 
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt       
+  profile       Profile?
+  todo          Todo[]
+  department_id Int
+  department    Department @relation(fields: [department_id],references: [id])
+}
+
+model Profile{
+  id              String @id @default(uuid())
+  employee_id     Int @unique
+  employee        Employee @relation(fields: [employee_id],references: [id])
+  Date_of_birth   DateTime
+  age             Int 
+  location        Location[]
+}
+
+model Location{
+  id            Int @id @default(autoincrement())
+  name          String 
+  type          LocationType 
+  profile       Profile[]
+}
+
+enum LocationType{
+  PERMANENT
+  TEMPORARY
+}
+
+model Todo{
+  id          Int @id @default(autoincrement())
+  name        String
+  employee_id  Int
+  employee    Employee @relation(fields: [employee_id],references: [id])
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+model Department{
+  id          Int @id @default(autoincrement())
+  name        String
+  type        DepartmentType
+  employees   Employee[]
+}
+
+enum DepartmentType{
+  ACCOUNTING
+  IT
+  SCIENCE
+  MANAGEMENT
+}
