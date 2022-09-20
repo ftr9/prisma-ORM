@@ -2,7 +2,7 @@
 
 easy migration from relational database to non relational database and vice versa
 
-# DB USED
+# DATABASE USED
 
-1. MYSQL inside mongo
-2. MONGODB inside sql
+1. MYSQL inside sql
+2. MONGO.DB inside mongo
